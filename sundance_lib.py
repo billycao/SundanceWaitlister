@@ -1,5 +1,6 @@
 import re
 import requests
+import time
 
 def sign_up(first_name,
             last_name,
@@ -23,11 +24,20 @@ def sign_up(first_name,
 
 def confirm_mailinator_email(email):
   email_username = email[0:email.index('@')]
-  # Get email ID.
-  inbox_response = requests.get(
-      'http://mailinator.com/api/webinbox?to=%s' % email_username)
-  email_id = inbox_response.json()['messages'][0]['id']
+  # Get email ID, with retries.
+  num_retries = 10
+  for retry_num in xrange(num_retries)
+    inbox_response = requests.get(
+        'http://mailinator.com/api/webinbox?to=%s' % email_username)
+    if len(inbox_response.json()['messages']) > 0:
+      break
+    else:
+      if retry_num == num_retries - 1:
+        print 'Error confirming email %s' % email
+        return False
+      time.sleep(1)
   # Get email contents.
+  email_id = inbox_response.json()['messages'][0]['id']
   email_response = requests.get(
       'http://mailinator.com/rendermail.jsp?msgid=%s' % email_id)
   # Search for Sundance confirm link.

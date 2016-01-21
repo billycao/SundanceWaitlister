@@ -1,21 +1,24 @@
 import sys
 
+import config
 import sundance_lib
 
 def main(argv):
-  # TODO: Create multiple accounts, store into local gitignored json file.
-  # TODO: Do some error printing here.
-  email = 'email_3@mailinator.com'
-  # sundance_lib.sign_up(
-  #     'test_first',
-  #     'test_last',
-  #     email,
-  #     '91007',
-  #     '123456')
-
-  sundance_lib.confirm_mailinator_email(email)
-
-  # Create an account group
+  # Create accounts.
+  for account_group in xrange(config.NUM_ACCOUNT_GROUPS):
+    for account in config.ACCOUNT_CONSTANTS:
+      email = config.EMAIL_PATTERN % account.extend({
+          'account_group': account_group,
+      }
+      sundance_lib.sign_up(
+          account['first_name'],
+          account['last_name'],
+          email,
+          account['zip_code'],
+          account['password'])
+      # Click mailinator confirmation email.
+      if not sundance_lib.confirm_mailinator_email(email):
+        print 'Error confirming email %s' % email
 
   # my_session = sundance_lib.WaitlistSession()
   # if not my_session.login('my_sundance_email@mailinator.com', '123456'):
