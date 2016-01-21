@@ -1,3 +1,4 @@
+import re
 import requests
 
 def sign_up(first_name,
@@ -18,6 +19,25 @@ def sign_up(first_name,
   r = requests.post('https://ewaitlist.sundance.org/register', data=payload)
   # TODO(billycao): Add error handling here.
   return r.text
+
+
+def confirm_mailinator_email(email):
+  email_username = email[0:email.index('@')]
+  # Get email ID.
+  inbox_response = requests.get(
+      'http://mailinator.com/api/webinbox?to=%s' % email_username)
+  email_id = inbox_response.json()['messages'][0]['id']
+  # Get email contents.
+  email_response = requests.get(
+      'http://mailinator.com/rendermail.jsp?msgid=%s' % email_id)
+  # Search for Sundance confirm link.
+  match = re.search('(http://ewaitlist.sundance.org/account/confirm/[a-z0-9]+)', email_response.text)
+  # Visit confirmation email.
+  if match:
+    requests.get(match.groups()[0])
+    return True
+  else:
+    return False
 
 
 class WaitlistSession(object):
