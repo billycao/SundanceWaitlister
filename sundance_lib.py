@@ -41,3 +41,9 @@ class WaitlistSession(object):
     }
     response = self.session.post('https://ewaitlist.sundance.org/account/code', headers=headers)
     return response.text
+
+  def link_account(self, link_code):
+    payload = {
+      'data[code]': link_code,
+    }
+    response = self.session.post('https://ewaitlist.sundance.org/account/link', data=payload)
