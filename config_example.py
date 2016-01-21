@@ -1,7 +1,12 @@
+# EXAMPLE CONFIGURATION. RENAME TO config.py TO USE.
+
 # This file defines configuration values for the Sundance Waitlister.
 
-# Number of linked accounts per account group.
-NUM_LINKED_ACCOUNTS = 2
+# If True, create the accounts. (This only needs to be done once)
+CREATE_ACCOUNTS = False
+
+# Number of account groups to manage.
+NUM_ACCOUNT_GROUPS = 5
 
 # Constant account parameters for each linked account.
 # len(ACCOUNT_CONSTANTS) must equal NUM_LINKED_ACCOUNTS.

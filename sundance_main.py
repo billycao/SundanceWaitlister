@@ -6,14 +6,14 @@ def main(argv):
   # TODO: Create multiple accounts, store into local gitignored json file.
   # TODO: Do some error printing here.
   email = 'email_3@mailinator.com'
-  sundance_lib.sign_up(
-      'test_first',
-      'test_last',
-      email,
-      '91007',
-      '123456')
+  # sundance_lib.sign_up(
+  #     'test_first',
+  #     'test_last',
+  #     email,
+  #     '91007',
+  #     '123456')
 
-  # sundance_lib.confirm_mailinator_email(email)
+  sundance_lib.confirm_mailinator_email(email)
 
   # Create an account group
 
