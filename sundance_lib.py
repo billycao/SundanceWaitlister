@@ -34,3 +34,10 @@ class WaitlistSession(object):
     if "Invalid email or password" in response.text:
       return False
     return True
+
+  def get_link_code(self):
+    headers = {
+      'X-Requested-With': 'XMLHttpRequest',
+    }
+    response = self.session.post('https://ewaitlist.sundance.org/account/code', headers=headers)
+    return response.text

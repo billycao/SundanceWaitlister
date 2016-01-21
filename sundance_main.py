@@ -15,6 +15,7 @@ def main(argv):
   my_session = sundance_lib.WaitlistSession()
   if not my_session.login('my_sundance_email@mailinator.com', '123456'):
     print "Invalid Login."
+  print "Link code: %s" % my_session.get_link_code()
 
 if __name__ == '__main__':
   main(sys.argv)
