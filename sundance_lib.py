@@ -26,15 +26,17 @@ def confirm_mailinator_email(email):
   email_username = email[0:email.index('@')]
   # Get email ID, with retries.
   num_retries = 10
-  for retry_num in xrange(num_retries)
+  for retry_num in xrange(num_retries):
     inbox_response = requests.get(
         'http://mailinator.com/api/webinbox?to=%s' % email_username)
-    if len(inbox_response.json()['messages']) > 0:
-      break
-    else:
-      if retry_num == num_retries - 1:
-        print 'Error confirming email %s' % email
-        return False
+    try:
+      if len(inbox_response.json()['messages']) > 0:
+        break
+      else:
+        if retry_num == num_retries - 1:
+          return False
+        time.sleep(1)
+    except ValueError as e:
       time.sleep(1)
   # Get email contents.
   email_id = inbox_response.json()['messages'][0]['id']
