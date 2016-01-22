@@ -90,12 +90,24 @@ class WaitlistSession(object):
 
   # TODO: Implement linked accounts functionality. 
   def waitlist(self, movie_id):
+    state = 'join'
     while True:
       print "Waitlisting for movie %d with email %s." % (
           movie_id, self.email)
       response = self.session.get(
-          'https://ewaitlist.sundance.org/join/%d/joining' % movie_id)
-      if not response.status_code == requests.code.ok:
-        "Received status_code %d, retrying..." % response.status_code
+          'https://ewaitlist.sundance.org/api/waitlist/%d/%s' % (
+              movie_id, state),
+          allow_redirects=False)
+      if 'queued' in response.text:
+        print "Queued, retrying with new state" 
+        state = 'check'
+      elif ('overload' in response.text or
+          'pending' in response.text or
+          'join_invalid' in response.text):
+        print "Received %s, retrying..." % response.text
+        state = 'join'
+        time.sleep(1)
       else:
+        print "Successfully waitlisted for movie %d with email %s: %s." % (
+            movie_id, self.email, response.text)
         return True
