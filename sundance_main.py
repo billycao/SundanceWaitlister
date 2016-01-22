@@ -30,20 +30,31 @@ def main(argv):
         session.login(email, account['password'])
         account_group_sessions.append(session)
       # Link odd accounts with even accounts.
-      for index, odd_session in enumerate(account_group_sessions[1::2]):
-        link_code = odd_session.get_link_code()
-        even_session = account_group_sessions[index * 2]
-        even_session.link_account(link_code)
+      # for index, odd_session in enumerate(account_group_sessions[1::2]):
+      #   print index
+      #   print odd_session.email
+      #   print even_session.email
+      #   link_code = odd_session.get_link_code()
+      #   even_session = account_group_sessions[index * 2]
+      #   even_session.link_account(link_code)
 
-  # my_session = sundance_lib.WaitlistSession()
-  # if not my_session.login('my_sundance_email@mailinator.com', '123456'):
-  #   print "Invalid Login."
-  # link_code = my_session.get_link_code()
+  # Register for e-waitlist.
+  for account_group in xrange(config.NUM_ACCOUNT_GROUPS):
+    # Sign in.
+    for account in config.ACCOUNT_CONSTANTS:
+        account.update({
+            'account_group': account_group,
+        })
+        email = config.EMAIL_PATTERN % account
+        # Log in.
+        session = sundance_lib.WaitlistSession()
+        if not session.login(email, account['password']):
+          print "Could not login with '%s':'%s'." % (
+              email, account['password'])
+          continue
+        for movie_id in config.MOVIE_IDS:
+          session.waitlist(movie_id)
 
-  # my_session_2 = sundance_lib.WaitlistSession()
-  # if not my_session_2.login('my_sundance_email_2@mailinator.com', '123456'):
-  #   print "Invalid Login."
-  # my_session_2.link_account(link_code)
 
 if __name__ == '__main__':
   main(sys.argv)
